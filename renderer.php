@@ -29,6 +29,12 @@ class renderer_plugin_text extends Doku_Renderer {
         return 'text';
     }
 
+    /* Compatibility functions for the xhtml mode */
+    public function startSectionEdit($start, $type, $title = null) {
+    }
+    public function finishSectionEdit($end = null) {
+    }
+
     //handle plugin rendering
     function plugin($name,$data){
         $plugin =& plugin_load('syntax',$name);
