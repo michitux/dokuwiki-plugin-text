@@ -2,6 +2,7 @@
 /**
  * Renderer for text output
  *
+ * @author Michael Hamann <michael@content-space.de>
  * @author Todd Augsburger <todd@rollerorgans.com>
  */
 

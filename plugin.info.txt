@@ -1,7 +1,7 @@
 base   text
-author Todd Augsburger, Michael Hamann
-email  todd@rollerorgans.com
+author Michael Hamann
+email  michael@content-space.de
 date   2012-06-29
 name   text plugin
-desc   renders page as plain text. USAGE: <pagename>?do=export_text
+desc   renders page as plain text. USAGE: <pagename>?do=export_text (Original author: Todd Augsburger)
 url    https://www.dokuwiki.org/plugin:text
