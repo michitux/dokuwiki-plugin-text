@@ -51,7 +51,7 @@ class renderer_plugin_text extends Doku_Renderer {
                   '@<![\s\S]*?--[ \t\n\r]*>@',                    // multi-line comments
                   '@\s+@'                                         // extra whitespace
                   );
-                $this->doc = $tmpData . trim(html_entity_decode(preg_replace($search,' ',$this->doc),ENT_QUOTES));
+                $this->doc = $tmpData . DOKU_LF . trim(html_entity_decode(preg_replace($search,' ',$this->doc),ENT_QUOTES)) . DOKU_LF;
               }
               else
                 $this->doc = $tmpData;
