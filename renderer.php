@@ -70,7 +70,7 @@ class renderer_plugin_text extends Doku_Renderer {
         $separator = '';
 
         $metaheader = array();
-        $metaheader['Content-Type'] = 'text/html; charset=utf-8';
+        $metaheader['Content-Type'] = 'text/plain; charset=utf-8';
         //$metaheader['Content-Disposition'] = 'attachment; filename="noname.txt"';
         $meta = array();
         $meta['format']['text'] = $metaheader;
