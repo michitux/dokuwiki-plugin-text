@@ -383,9 +383,15 @@ class renderer_plugin_text extends Doku_Renderer {
             }
             return $default;
         } else if ( is_string($title) ) {
-            return $title;
+            if (!is_null($default) && ($default != $title))
+                return $default." ".$title;
+            else
+                return $title;
         } else if ( is_array($title) ) {
-            return $title['title'];
+            if (!is_null($default) && ($default != $title['title']))
+                return $default." ".$title['title'];
+            else
+                return $title['title'];
         }
     }
 
