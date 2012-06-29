@@ -25,17 +25,6 @@ class renderer_plugin_text extends Doku_Renderer {
     var $nSpan = 0;
     var $separator = '';
 
-    function getInfo(){
-      return array(
-       'author' => 'Todd Augsburger',
-       'email'  => 'todd@rollerorgans.com',
-       'date'   => '2008-02-26',
-       'name'   => 'Text Renderer',
-       'desc'   => "renders page as plain text\nUSAGE: <pagename>?do=export_text\n",
-       'url'    => 'http://wiki.splitbrain.org/plugin:text',
-       );
-    }
-
     function getFormat(){
         return 'text';
     }
