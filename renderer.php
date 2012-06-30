@@ -197,10 +197,16 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     function php($text) {
-        ob_start();
-        eval($text);
-        $this->doc .= strip_tags(ob_get_contents());
-        ob_end_clean();
+        global $conf;
+
+        if($conf['phpok']){
+            ob_start();
+            eval($text);
+            $this->html(ob_get_contents());
+            ob_end_clean();
+        } else {
+            $this->cdata($text);
+        }
     }
 
     function phpblock($text) {
