@@ -64,11 +64,11 @@ class renderer_plugin_text extends Doku_Renderer {
         global $ID;
 
         $this->doc = '';
-        $toc = array();
-        $footnotes = array();
-        $store = '';
-        $nSpan = 0;
-        $separator = '';
+        $this->toc = array();
+        $this->footnotes = array();
+        $this->store = '';
+        $this->nSpan = 0;
+        $this->separator = '';
 
         $metaheader = array();
         $metaheader['Content-Type'] = 'text/plain; charset=utf-8';
