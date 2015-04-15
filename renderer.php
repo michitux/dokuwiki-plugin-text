@@ -31,13 +31,13 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     /* Compatibility functions for the xhtml mode */
-    public function startSectionEdit($start, $type, $title = null) {
+    public function startSectionEdit($start, $type, $title = NULL) {
     }
-    public function finishSectionEdit($end = null) {
+    public function finishSectionEdit($end = NULL) {
     }
 
     //handle plugin rendering
-    function plugin($name,$data){
+    function plugin($name, $data, $state = '', $match = ''){
         $plugin =& plugin_load('syntax',$name);
         if($plugin != null){
             if(!$plugin->render($this->getFormat(),$this,$data)) {
@@ -225,11 +225,11 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= $text.DOKU_LF;
     }
 
-    function file($text) {
+    function file($text, $lang = NULL, $file = NULL) {
         $this->doc .= $text.DOKU_LF;
     }
 
-    function code($text, $language = NULL) {
+    function code($text, $lang = NULL, $file = NULL) {
         $this->preformatted($text);
     }
 
@@ -331,7 +331,7 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= $title;
     }
 
-    function table_close(){
+    function table_close($pos = NULL){
         $this->doc .= DOKU_LF;
     }
 
@@ -343,7 +343,7 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= DOKU_LF;
     }
 
-    function tableheader_open($colspan = 1, $align = NULL){
+    function tableheader_open($colspan = 1, $align = NULL, $rowspan = 1){
         $this->tablecell_open();
     }
 
@@ -351,7 +351,7 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->tablecell_close();
     }
 
-    function tablecell_open($colspan = 1, $align = NULL){
+    function tablecell_open($colspan = 1, $align = NULL, $rowspan = 1){
         $this->nSpan = $colspan;
         $this->doc .= $this->separator;
         $this->separator = ', ';
