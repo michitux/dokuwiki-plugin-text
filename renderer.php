@@ -37,25 +37,25 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     //handle plugin rendering
-    function plugin($name, $data, $state = '', $match = ''){
-        if(!plugin_isdisabled($name)) {
+    function plugin($name, $data, $state = '', $match = '') {
+        if (!plugin_isdisabled($name)) {
             $plugin = plugin_load('syntax', $name);
-            if(!$plugin->render($this->getFormat(),$this,$data)) {
+            if (!$plugin->render($this->getFormat(),$this,$data)) {
 
-              // probably doesn't support text, so use stripped-down xhtml
-              $tmpData = $this->doc;
-              $this->doc = '';
-              if($plugin->render('xhtml',$this,$data) && ($this->doc != '')) {
-                $search = array('@<script[^>]*?>.*?</script>@si', // javascript
-                  '@<style[^>]*?>.*?</style>@siU',                // style tags
-                  '@<[\/\!]*?[^<>]*?>@si',                        // HTML tags
-                  '@<![\s\S]*?--[ \t\n\r]*>@',                    // multi-line comments
-                  '@\s+@'                                         // extra whitespace
-                  );
-                $this->doc = $tmpData . DOKU_LF . trim(html_entity_decode(preg_replace($search,' ',$this->doc),ENT_QUOTES)) . DOKU_LF;
-              }
-              else
-                $this->doc = $tmpData;
+                // probably doesn't support text, so use stripped-down xhtml
+                $tmpData = $this->doc;
+                $this->doc = '';
+                if ($plugin->render('xhtml',$this,$data) && ($this->doc != '')) {
+                    $search = array('@<script[^>]*?>.*?</script>@si', // javascript
+                      '@<style[^>]*?>.*?</style>@siU',                // style tags
+                      '@<[\/\!]*?[^<>]*?>@si',                        // HTML tags
+                      '@<![\s\S]*?--[ \t\n\r]*>@',                    // multi-line comments
+                      '@\s+@',                                         // extra whitespace
+                    );
+                    $this->doc = $tmpData . DOKU_LF .
+                        trim(html_entity_decode(preg_replace($search,' ',$this->doc),ENT_QUOTES)) .
+                        DOKU_LF;
+                } else  $this->doc = $tmpData;
             }
         }
     }
@@ -79,7 +79,7 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     function document_end() {
-        if ( count ($this->footnotes) > 0 ) {
+        if ( count($this->footnotes) > 0 ) {
             $this->doc .= DOKU_LF;
 
             $id = 0;
@@ -112,7 +112,7 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     function header($text, $level, $pos) {
-        $this->doc .= DOKU_LF.$text.DOKU_LF;
+        $this->doc .= DOKU_LF . $text . DOKU_LF;
     }
 
     function section_close() {
@@ -199,7 +199,7 @@ class renderer_plugin_text extends Doku_Renderer {
     function php($text) {
         global $conf;
 
-        if($conf['phpok']){
+        if ($conf['phpok']) {
             ob_start();
             eval($text);
             $this->html(ob_get_contents());
@@ -284,7 +284,7 @@ class renderer_plugin_text extends Doku_Renderer {
     }
 
     function camelcaselink($link) {
-      $this->internallink($link,$link);
+        $this->internallink($link,$link);
     }
 
     function locallink($hash, $name = NULL){
@@ -315,7 +315,7 @@ class renderer_plugin_text extends Doku_Renderer {
     function emaillink($address, $name = NULL) {
         $name = $this->_getLinkTitle($name, '', $isImage);
         $address = html_entity_decode(obfuscate($address),ENT_QUOTES,'UTF-8');
-        if(empty($name)){
+        if (empty($name)) {
             $name = $address;
         }
         $this->doc .= $name;
@@ -331,33 +331,33 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= $title;
     }
 
-    function table_close($pos = NULL){
+    function table_close($pos = NULL) {
         $this->doc .= DOKU_LF;
     }
 
-    function tablerow_open(){
+    function tablerow_open() {
         $this->separator = '';
     }
 
-    function tablerow_close(){
+    function tablerow_close() {
         $this->doc .= DOKU_LF;
     }
 
-    function tableheader_open($colspan = 1, $align = NULL, $rowspan = 1){
+    function tableheader_open($colspan = 1, $align = NULL, $rowspan = 1) {
         $this->tablecell_open();
     }
 
-    function tableheader_close(){
+    function tableheader_close() {
         $this->tablecell_close();
     }
 
-    function tablecell_open($colspan = 1, $align = NULL, $rowspan = 1){
+    function tablecell_open($colspan = 1, $align = NULL, $rowspan = 1) {
         $this->nSpan = $colspan;
         $this->doc .= $this->separator;
         $this->separator = ', ';
     }
 
-    function tablecell_close(){
+    function tablecell_close() {
         $this->doc .= str_repeat(',',$this->nSpan-1);
         $this->nSpan = 0;
     }
@@ -369,7 +369,7 @@ class renderer_plugin_text extends Doku_Renderer {
      * @param boolean $create  Create a new unique ID?
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _headerToLink($title,$create=false) {
+    function _headerToLink($title, $create=false) {
         $title = str_replace(':','',cleanID($title));
         $title = ltrim($title,'0123456789._-');
         if(empty($title)) $title='section';
@@ -389,12 +389,12 @@ class renderer_plugin_text extends Doku_Renderer {
                 }
             }
             return $default;
-        } else if ( is_string($title) ) {
+        } elseif ( is_string($title) ) {
             if (!is_null($default) && ($default != $title))
                 return $default." ".$title;
             else
                 return $title;
-        } else if ( is_array($title) ) {
+        } elseif ( is_array($title) ) {
             if (!is_null($default) && ($default != $title['title']))
                 return $default." ".$title['title'];
             else
@@ -406,11 +406,11 @@ class renderer_plugin_text extends Doku_Renderer {
         return $string; // nothing to do for text
     }
 
-    function _formatLink($link){
-        if(!empty($link['name']))
-          return $link['name'];
-        elseif(!empty($link['title']))
-          return $link['title'];
-          return $link['url'];
+    function _formatLink($link) {
+        if (!empty($link['name']))
+            return $link['name'];
+        elseif (!empty($link['title']))
+            return $link['title'];
+        return $link['url'];
     }
 }
