@@ -38,8 +38,9 @@ class renderer_plugin_text extends Doku_Renderer {
 
     //handle plugin rendering
     function plugin($name, $data, $state = '', $match = '') {
-        if (!plugin_isdisabled($name)) {
-            $plugin = plugin_load('syntax', $name);
+        /** @var DokuWiki_Syntax_Plugin $plugin */
+        $plugin = plugin_load('syntax', $name);
+        if ($plugin != NULL) {
             if (!$plugin->render($this->getFormat(),$this,$data)) {
 
                 // probably doesn't support text, so use stripped-down xhtml
