@@ -13,16 +13,12 @@ if ( !defined('DOKU_LF') ) {
 }
 
 require_once DOKU_INC . 'inc/parser/renderer.php';
+require_once DOKU_INC . 'inc/parser/xhtml.php';
 require_once DOKU_INC . 'inc/html.php';
 
-class renderer_plugin_text extends Doku_Renderer {
+class renderer_plugin_text extends Doku_Renderer_xhtml {
 
     // @access public
-    var $doc = '';        // will contain the whole document
-    var $toc = array();   // will contain the Table of Contents
-
-    var $footnotes = array();
-    var $store = '';
     var $nSpan = 0;
     var $separator = '';
 
@@ -48,7 +44,7 @@ class renderer_plugin_text extends Doku_Renderer {
                 $this->doc = '';
                 if ($plugin->render('xhtml',$this,$data) && ($this->doc != '')) {
                     $search = array('@<script[^>]*?>.*?</script>@si', // javascript
-                      '@<style[^>]*?>.*?</style>@siU',                // style tags
+                      '@<style[^>]*?>.*?</style>@si',                // style tags
                       '@<[\/\!]*?[^<>]*?>@si',                        // HTML tags
                       '@<![\s\S]*?--[ \t\n\r]*>@',                    // multi-line comments
                       '@\s+@',                                         // extra whitespace
@@ -103,7 +99,8 @@ class renderer_plugin_text extends Doku_Renderer {
         }
 
         // Prepare the TOC
-        if($this->info['toc'] && is_array($this->toc) && count($this->toc) > 2){
+        global $conf;
+        if($this->info['toc'] && is_array($this->toc) && $conf['tocminheads'] && count($this->toc) >= $conf['tocminheads']) {
             global $TOC;
             $TOC = $this->toc;
         }
@@ -116,12 +113,18 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= DOKU_LF . $text . DOKU_LF;
     }
 
+    function section_open($level) {
+    }
+
     function section_close() {
         $this->doc .= DOKU_LF;
     }
 
     function cdata($text) {
         $this->doc .= $text;
+    }
+
+    function p_open() {
     }
 
     function p_close() {
@@ -134,6 +137,90 @@ class renderer_plugin_text extends Doku_Renderer {
 
     function hr() {
         $this->doc .= '--------'.DOKU_LF;
+    }
+
+    /**
+     * Start strong (bold) formatting
+     */
+    function strong_open() {
+    }
+
+    /**
+     * Stop strong (bold) formatting
+     */
+    function strong_close() {
+    }
+
+    /**
+     * Start emphasis (italics) formatting
+     */
+    function emphasis_open() {
+    }
+
+    /**
+     * Stop emphasis (italics) formatting
+     */
+    function emphasis_close() {
+    }
+
+    /**
+     * Start underline formatting
+     */
+    function underline_open() {
+    }
+
+    /**
+     * Stop underline formatting
+     */
+    function underline_close() {
+    }
+
+    /**
+     * Start monospace formatting
+     */
+    function monospace_open() {
+    }
+
+    /**
+     * Stop monospace formatting
+     */
+    function monospace_close() {
+    }
+
+    /**
+     * Start a subscript
+     */
+    function subscript_open() {
+    }
+
+    /**
+     * Stop a subscript
+     */
+    function subscript_close() {
+    }
+
+    /**
+     * Start a superscript
+     */
+    function superscript_open() {
+    }
+
+    /**
+     * Stop a superscript
+     */
+    function superscript_close() {
+    }
+
+    /**
+     * Start deleted (strike-through) formatting
+     */
+    function deleted_open() {
+    }
+
+    /**
+     * Stop deleted (strike-through) formatting
+     */
+    function deleted_close() {
     }
 
     /**
@@ -185,8 +272,48 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= ' '.$id.')';
     }
 
+    /**
+     * Open an unordered list
+     */
+    function listu_open() {
+    }
+
     function listu_close() {
         $this->doc .= DOKU_LF;
+    }
+
+    /**
+     * Open an ordered list
+     */
+    function listo_open() {
+    }
+
+    /**
+     * Close an ordered list
+     */
+    function listo_close() {
+        $this->doc .= DOKU_LF;
+    }
+
+    /**
+     * Open a list item
+     *
+     * @param int $level the nesting level
+     * @param bool $node true when a node; false when a leaf
+     */
+    function listitem_open($level, $node=false) {
+    }
+
+    /**
+     * Close a list item
+     */
+    function listitem_close() {
+    }
+
+    /**
+     * Start the content of a list item
+     */
+    function listcontent_open() {
     }
 
     function listcontent_close() {
@@ -220,6 +347,19 @@ class renderer_plugin_text extends Doku_Renderer {
 
     function htmlblock($text) {
         $this->html($text);
+    }
+
+    /**
+     * Start a block quote
+     */
+    function quote_open() {
+    }
+
+    /**
+     * Stop a block quote
+     */
+    function quote_close() {
+        $this->doc .= DOKU_LF;
     }
 
     function preformatted($text) {
@@ -293,12 +433,17 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= $name;;
     }
 
-    function internallink($id, $name = NULL, $search=NULL,$returnonly=false) {
+    function internallink($id, $name = null, $search = null, $returnonly = false, $linktype = 'content') {
         global $ID;
         // default name is based on $id as given
         $default = $this->_simpleTitle($id);
         resolve_pageid(getNS($ID),$id,$exists);
-        $this->doc .= $this->_getLinkTitle($name, $default, $isImage, $id);
+        $name = $this->_getLinkTitle($name, $default, $isImage, $id, $linktype);
+        if ($returnonly) {
+            return $name;
+        } else {
+            $this->doc .= $name;
+        }
     }
 
     function externallink($url, $name = NULL) {
@@ -332,8 +477,45 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->doc .= $title;
     }
 
+    function rss($url, $params) {
+    }
+
+    /**
+     * Start a table
+     *
+     * @param int $maxcols maximum number of columns
+     * @param int $numrows NOT IMPLEMENTED
+     * @param int $pos     byte position in the original source
+     */
+    function table_open($maxcols = null, $numrows = null, $pos = null) {
+    }
+
     function table_close($pos = NULL) {
         $this->doc .= DOKU_LF;
+    }
+
+    /**
+     * Open a table header
+     */
+    function tablethead_open() {
+    }
+
+    /**
+     * Close a table header
+     */
+    function tablethead_close() {
+    }
+
+    /**
+     * Open a table body
+     */
+    function tabletbody_open() {
+    }
+
+    /**
+     * Close a table body
+     */
+    function tabletbody_close() {
     }
 
     function tablerow_open() {
@@ -363,43 +545,24 @@ class renderer_plugin_text extends Doku_Renderer {
         $this->nSpan = 0;
     }
 
-    /**
-     * Creates a linkid from a headline
-     *
-     * @param string  $title   The headline title
-     * @param boolean $create  Create a new unique ID?
-     * @author Andreas Gohr <andi@splitbrain.org>
-     */
-    function _headerToLink($title, $create=false) {
-        $title = str_replace(':','',cleanID($title));
-        $title = ltrim($title,'0123456789._-');
-        if(empty($title)) $title='section';
-
-        return $title;
-    }
-
-    function _getLinkTitle($title, $default, & $isImage, $id=NULL) {
-        global $conf;
-
+    function _getLinkTitle($title, $default, &$isImage, $id = null, $linktype = 'content') {
         $isImage = false;
-        if ( is_null($title) ) {
-            if ($conf['useheading'] && $id) {
-                $heading = p_get_first_heading($id,true);
-                if ($heading) {
-                    return $heading;
-                }
-            }
-            return $default;
-        } elseif ( is_string($title) ) {
-            if (!is_null($default) && ($default != $title))
-                return $default." ".$title;
-            else
-                return $title;
-        } elseif ( is_array($title) ) {
+        if(is_array($title)) {
+            $isImage = true;
             if (!is_null($default) && ($default != $title['title']))
                 return $default." ".$title['title'];
             else
                 return $title['title'];
+        } elseif(is_null($title) || trim($title) == '') {
+            if(useHeading($linktype) && $id) {
+                $heading = p_get_first_heading($id);
+                if($heading) {
+                    return $this->_xmlEntities($heading);
+                }
+            }
+            return $this->_xmlEntities($default);
+        } else {
+            return $this->_xmlEntities($title);
         }
     }
 
