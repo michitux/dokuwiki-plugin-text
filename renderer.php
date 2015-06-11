@@ -541,7 +541,9 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     }
 
     function tablecell_close() {
-        $this->doc .= str_repeat(',',$this->nSpan-1);
+        if ($this->nSpan > 0) {
+            $this->doc .= str_repeat(',', $this->nSpan - 1);
+        }
         $this->nSpan = 0;
     }
 
