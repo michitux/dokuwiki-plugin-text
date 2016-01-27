@@ -324,7 +324,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc .= $text;
     }
 
-    function php($text) {
+    function php($text, $wrapper='code') {
         global $conf;
 
         if ($conf['phpok']) {
@@ -341,7 +341,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc .= $text;
     }
 
-    function html($text) {
+    function html($text, $wrapper='code') {
         $this->doc .= strip_tags($text);
     }
 
@@ -424,11 +424,11 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc .= $lang['doublequoteclosing'];
     }
 
-    function camelcaselink($link) {
+    function camelcaselink($link, $returnonly=false) {
         $this->internallink($link,$link);
     }
 
-    function locallink($hash, $name = NULL){
+    function locallink($hash, $name = NULL, $returnonly=false){
         $name  = $this->_getLinkTitle($name, $hash, $isImage);
         $this->doc .= $name;;
     }
@@ -446,19 +446,19 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         }
     }
 
-    function externallink($url, $name = NULL) {
+    function externallink($url, $name = NULL, $returnonly=false) {
         $this->doc .= $this->_getLinkTitle($name, $url, $isImage);
     }
 
-    function interwikilink($match, $name = NULL, $wikiName, $wikiUri) {
+    function interwikilink($match, $name = NULL, $wikiName, $wikiUri, $returnonly=false) {
         $this->doc .= $this->_getLinkTitle($name, $wikiUri, $isImage);
     }
 
-    function windowssharelink($url, $name = NULL) {
+    function windowssharelink($url, $name = NULL, $returnonly=false) {
         $this->doc .= $this->_getLinkTitle($name, $url, $isImage);
     }
 
-    function emaillink($address, $name = NULL) {
+    function emaillink($address, $name = NULL, $returnonly=false) {
         $name = $this->_getLinkTitle($name, '', $isImage);
         $address = html_entity_decode(obfuscate($address),ENT_QUOTES,'UTF-8');
         if (empty($name)) {
@@ -468,12 +468,12 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     }
 
     function internalmedia ($src, $title=NULL, $align=NULL, $width=NULL,
-                            $height=NULL, $cache=NULL, $linking=NULL) {
+                            $height=NULL, $cache=NULL, $linking=NULL, $return=false) {
         $this->doc .= $title;
     }
 
     function externalmedia ($src, $title=NULL, $align=NULL, $width=NULL,
-                            $height=NULL, $cache=NULL, $linking=NULL) {
+                            $height=NULL, $cache=NULL, $linking=NULL, $return=false) {
         $this->doc .= $title;
     }
 
