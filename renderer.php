@@ -275,7 +275,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     /**
      * Open an unordered list
      */
-    function listu_open() {
+    function listu_open($classes = NULL) {
     }
 
     function listu_close() {
@@ -285,7 +285,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     /**
      * Open an ordered list
      */
-    function listo_open() {
+    function listo_open($classes = NULL) {
     }
 
     /**
@@ -487,7 +487,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
      * @param int $numrows NOT IMPLEMENTED
      * @param int $pos     byte position in the original source
      */
-    function table_open($maxcols = null, $numrows = null, $pos = null) {
+    function table_open($maxcols = null, $numrows = null, $pos = null, $classes = null) {
     }
 
     function table_close($pos = NULL) {
@@ -518,7 +518,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     function tabletbody_close() {
     }
 
-    function tablerow_open() {
+    function tablerow_open($classes=NULL) {
         $this->separator = '';
     }
 
@@ -526,7 +526,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc .= DOKU_LF;
     }
 
-    function tableheader_open($colspan = 1, $align = NULL, $rowspan = 1) {
+    function tableheader_open($colspan = 1, $align = NULL, $rowspan = 1, $classes = null) {
         $this->tablecell_open();
     }
 
@@ -534,7 +534,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->tablecell_close();
     }
 
-    function tablecell_open($colspan = 1, $align = NULL, $rowspan = 1) {
+    function tablecell_open($colspan = 1, $align = NULL, $rowspan = 1, $classes = null) {
         $this->nSpan = $colspan;
         $this->doc .= $this->separator;
         $this->separator = ', ';
