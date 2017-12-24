@@ -6,33 +6,42 @@
  * @author Todd Augsburger <todd@rollerorgans.com>
  */
 
-if(!defined('DOKU_INC')) define('DOKU_INC',fullpath(dirname(__FILE__).'/../../').'/');
+if(!defined('DOKU_INC')) die();
 
-if ( !defined('DOKU_LF') ) {
-    define ('DOKU_LF',"\n");
-}
-
-require_once DOKU_INC . 'inc/parser/renderer.php';
-require_once DOKU_INC . 'inc/parser/xhtml.php';
-require_once DOKU_INC . 'inc/html.php';
-
+/**
+ * Class Renderer for exporting wiki content as plain text
+ */
 class renderer_plugin_text extends Doku_Renderer_xhtml {
 
     // @access public
     var $nSpan = 0;
     var $separator = '';
 
+    /**
+     * Returns the format produced by this renderer.
+     *
+     * @return string
+     */
     function getFormat(){
         return 'text';
     }
 
     /* Compatibility functions for the xhtml mode */
-    public function startSectionEdit($start, $type, $title = NULL) {
+    public function startSectionEdit($start, $type, $title = null, $hid = null) {
     }
-    public function finishSectionEdit($end = NULL) {
+    public function finishSectionEdit($end = null, $hid = null) {
     }
 
-    //handle plugin rendering
+    /**
+     * Handle plugin rendering
+     *
+     * Most likely this needs NOT to be overwritten by sub classes
+     *
+     * @param string $name  Plugin name
+     * @param mixed  $data  custom data set by handler
+     * @param string $state matched state if any
+     * @param string $match raw matched syntax
+     */
     function plugin($name, $data, $state = '', $match = '') {
         /** @var DokuWiki_Syntax_Plugin $plugin */
         $plugin = plugin_load('syntax', $name);
@@ -52,7 +61,9 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
                     $this->doc = $tmpData . DOKU_LF .
                         trim(html_entity_decode(preg_replace($search,' ',$this->doc),ENT_QUOTES)) .
                         DOKU_LF;
-                } else  $this->doc = $tmpData;
+                } else {
+                    $this->doc = $tmpData;
+                }
             }
         }
     }
