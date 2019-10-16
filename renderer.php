@@ -29,7 +29,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
     /* Compatibility functions for the xhtml mode */
     public function startSectionEdit($start, $type, $title = NULL) {
     }
-    public function finishSectionEdit($end = NULL) {
+    public function finishSectionEdit($end = null, $hid = null) {
     }
 
     //handle plugin rendering
@@ -366,11 +366,11 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc .= $text.DOKU_LF;
     }
 
-    function file($text, $lang = NULL, $file = NULL) {
+    function file($text, $language = null, $filename = null, $options = null) {
         $this->doc .= $text.DOKU_LF;
     }
 
-    function code($text, $lang = NULL, $file = NULL) {
+    function code($text, $language = null, $filename = null, $options = null) {
         $this->preformatted($text);
     }
 
