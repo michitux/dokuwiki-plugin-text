@@ -109,7 +109,7 @@ class renderer_plugin_text extends Doku_Renderer_xhtml {
         $this->doc = preg_replace('#'.DOKU_LF.'\s*'.DOKU_LF.'\s*'.DOKU_LF.'#',DOKU_LF.DOKU_LF,$this->doc);
     }
 
-    function header($text, $level, $pos) {
+    function header($text, $level, $pos, $returnonly = false) {
         $this->doc .= DOKU_LF . $text . DOKU_LF;
     }
 
